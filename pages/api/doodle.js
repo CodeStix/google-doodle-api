@@ -43,6 +43,7 @@ export default async function handler(req, res) {
         res.setHeader("Access-Control-Allow-Methods", "GET");
         res.setHeader("Access-Control-Allow-Credentials", "true");
         res.write(imageBuffer);
+        res.end();
     } else {
         return res.status(405).end();
     }
