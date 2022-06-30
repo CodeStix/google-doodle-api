@@ -1,4 +1,4 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import fetch from "isomorphic-fetch";
 
 export default async function handler(req, res) {
     if (req.method === "GET") {
