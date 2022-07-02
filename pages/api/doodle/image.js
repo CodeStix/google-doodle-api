@@ -1,29 +1,12 @@
 import fetch from "isomorphic-fetch";
+import { getCurrentDoodle } from "../../../doodle";
 
 export default async function handler(req, res) {
     if (req.method === "GET") {
-        let now = new Date();
-
-        let response = await fetch(`https://www.google.com/doodles/json/${now.getFullYear()}/${now.getMonth() + 1}`);
-        if (!response.ok) {
-            console.error("Could not fetch doodles", await response.text());
-            return res.status(400).end();
-        }
-
-        let data = await response.json();
-
-        let currentDoodle;
-        let currentDoodleDay = -1;
-        for (let doodle of data) {
-            let day = doodle.run_date_array[2];
-            if (day <= now.getDate() && day > currentDoodleDay) {
-                currentDoodle = doodle;
-                currentDoodleDay = day;
-            }
-        }
+        let currentDoodle = await getCurrentDoodle();
 
         if (!currentDoodle) {
-            console.error("Could not get current doodle", await res.text());
+            console.error("Could not get current doodle", currentDoodle);
             return res.status(400).end();
         }
 
@@ -31,7 +14,7 @@ export default async function handler(req, res) {
         let imageResponse = await fetch(url);
 
         if (!imageResponse.ok) {
-            console.error("Could not download image", await res.text());
+            console.error("Could not download image", await imageResponse.text());
             return res.status(400).end();
         }
 
